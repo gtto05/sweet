@@ -1,70 +1,231 @@
-# Getting Started with Create React App
+## init project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```zsh
+yarn create react-app sweet
+// or
+npx create-react-app sweet
+// eslint formater
+npx install-peerdeps --dev eslint-config-wesbos
 
-## Available Scripts
+```
 
-In the project directory, you can run:
+## Global Style
 
-### `yarn start`
+1. **create** `src/styles/GlobalStyle.js`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```javascript
+import { createGlobalStyle } from "styled-components";
+const GlobalStyle = createGlobalStyle`
+/* css */
+`;
+export default GlobalStyle;
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. component `App` **call** `GlobalStyle`
 
-### `yarn test`
+```javascript
+// App.js
+import GlobalStyles from "./styles/GlobalStyle";
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+function App() {
+  return (
+    <>
+      <GlobalStyles />
+      <h3>Project name: sweet</h3>
+      <p>by Hansum</p>
+    </>
+  );
+}
+```
 
-### `yarn build`
+## Header
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **create** component `src/views/landingPage.js`
+2. **create** component `src/components/Header.js` & **styled**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```javascript
+import React from "react";
+import { Link } from "react-scroll";
+import styled from "styled-components";
+import Logo from "./Logo";
+import ThemeSwitcher from "./ThemeSwitcher";
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+function Header() {
+  return (
+    <HeaderStyles>
+      <div className="container">
+        <div className="navigation">
+          <Logo />
+          <div className="navMenu">
+            <nav>
+              <ul>
+                <li>
+                  <Link to="home">首页</Link>
+                </li>
+                <li>
+                  <Link to="services">支持</Link>
+                </li>
+                <li>
+                  <Link to="about">关于</Link>
+                </li>
+                <li>
+                  <Link to="contact">联系我们</Link>
+                </li>
+              </ul>
+            </nav>
+            <ThemeSwitcher />
+          </div>
+        </div>
+      </div>
+    </HeaderStyles>
+  );
+}
 
-### `yarn eject`
+const HeaderStyles = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: var(--lightBlue_1);
+  border-bottom: 1px solid var(--mediumSlateBlue);
+  .navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+  }
+  nav ul li {
+    display: inline-block;
+    margin: 0 0.5rem;
+    a {
+      font-size: 1.6rem;
+      font-weight: 500;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      color: var(--darkBlue_2);
+    }
+    &:hover {
+      a {
+        text-decoration: underline;
+      }
+    }
+  }
+`;
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+export default Header;
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. component `LandingPage` **call** component `Header`
+4. component `App` **call** component`LandingPage`
+5. **create** component `Logo` & **styled**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```js
+/* Logo.js */
+import React from "react";
+import styled from "styled-components";
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+const LogoStyles = styled.div`
+  max-width: 100px;
+  svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+`;
 
-## Learn More
+function Logo() {
+  return (
+    <LogoStyles>
+      <svg viewBox="0 0 71 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+        ...
+      </svg>
+    </LogoStyles>
+  );
+}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+export default Logo;
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+8. **create** component `ThemeSwitcher` & **styled**
 
-### Code Splitting
+```javascript
+import React from "react";
+import { FiMoon, FiSun } from "react-icons/fi";
+import styled from "styled-components";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+const ThemeSwitcherStyles = styled.div`
+  label {
+    --gap: 5px;
+    --size: 20px;
+    height: 30px;
+    width: 55px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    cursor: pointer;
+    background-color: #cfc8f4;
+    border-radius: 50px;
+    z-index: 1;
+    .icon {
+      height: var(--size);
+      width: var(--size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    svg {
+      width: 75%;
+      color: var(--white);
+    }
+    /* 背景 */
+    &::after {
+      position: absolute;
+      content: "";
+      border-radius: 50%;
+      transform: translateY(-50%);
+      top: 50%;
+      left: var(--gap);
+      height: var(--size);
+      width: var(--size);
+      z-index: -1;
+      background-color: var(--mediumSlateBlue);
+      transition: 0.5s ease left;
+    }
+  }
+  input {
+    width: 0;
+    height: 0;
+    display: none;
+    visibility: hidden;
+    &:checked + label::after {
+      left: calc(100% - var(--size) - var(--gap));
+    }
+  }
+`;
 
-### Analyzing the Bundle Size
+function ThemeSwitcher() {
+  return (
+    <ThemeSwitcherStyles>
+      <input type="checkbox" id="switcher" />
+      <label htmlFor="switcher">
+        <div className="icon">
+          <FiSun />
+        </div>
+        <div className="icon">
+          <FiMoon />
+        </div>
+      </label>
+    </ThemeSwitcherStyles>
+  );
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+export default ThemeSwitcher;
+```
 
-### Making a Progressive Web App
+## ThemeContext
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. **create** contexts `ThemeContext`
+2. **create** data `themeList`
